@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data &amp; Fakta | EnergyCare</title>
+  <meta name="description" content="Hasil kuesioner perilaku hemat energi siswa kelas XI: statistik, grafik, temuan utama, dan analisis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23123D2C%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#konten">Lewati ke konten</a>
+
+<!-- NAVBAR (sama di semua halaman) -->
+<header class="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo" aria-label="EnergyCare, ke Beranda">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg>
+      EnergyCare
+    </a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <ul class="nav-menu">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="tentang.html">Tentang</a></li>
+      <li><a href="data.html">Data &amp; Fakta</a></li>
+      <li><a href="aksi.html">Aksi &amp; Rekomendasi</a></li>
+      <li><a href="aksi.html" class="btn btn-primary">Mulai Aksi</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="konten">
+  <section class="hero">
+    <svg class="hero-leaf" viewBox="0 0 24 24" fill="#DCE9B8" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/></svg>
+    <div class="container hero-inner">
+      <h1>Data &amp; Fakta</h1>
+      <p>Hasil kuesioner perilaku hemat energi siswa kelas XI, ditampilkan apa adanya dari data survei.</p>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div class="status" id="status-loading" role="status">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Memuat data survei...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="container status" id="status-error" role="alert" hidden>
+    <div class="error-box">
+      <h2>Data belum dapat ditampilkan</h2>
+      <p>File data survei gagal dibaca. Pastikan website dibuka melalui Live Server (bukan klik dua kali pada file) dan file <strong>data/data-perilaku-energi.json</strong> tersedia.</p>
+      <button type="button" class="btn btn-primary" id="btn-ulang">Coba lagi</button>
+    </div>
+  </div>
+
+  <div id="data-content" hidden>
+    <!-- Ringkasan data -->
+    <section class="section">
+      <div class="container">
+        <h2>Ringkasan Data</h2>
+        <p class="lead">Data mencakup siswa kelas XI secara keseluruhan dari berbagai jurusan.</p>
+        <div class="stat-grid" id="stat-grid"></div>
+      </div>
+    </section>
+
+    <!-- Distribusi kategori -->
+    <section class="section section-flush">
+      <div class="container">
+        <h2>Distribusi Kategori</h2>
+        <p class="lead">Jumlah siswa pada setiap kategori perilaku hemat energi. Arahkan kursor atau ketuk bagian grafik untuk melihat jumlah dan persentasenya.</p>
+        <div class="chart-card">
+          <div class="chart-box"><canvas id="grafik-kategori" role="img" aria-label="Grafik doughnut distribusi siswa berdasarkan kategori perilaku hemat energi"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grafik perilaku -->
+    <section class="section section-flush">
+      <div class="container">
+        <h2>Perilaku Hemat Energi</h2>
+        <p class="lead">Rata-rata skor untuk 10 indikator perilaku (P01 sampai P10) pada skala 1 sampai 4.</p>
+        <div class="chart-card">
+          <div class="chart-split">
+            <div>
+              <div class="chart-box tall"><canvas id="grafik-butir" role="img" aria-label="Grafik batang horizontal rata-rata skor 10 indikator perilaku hemat energi"></canvas></div>
+              <div class="legend-note">
+                <span style="--c:#1D5A40">Tiga skor tertinggi</span>
+                <span style="--c:#C9A66B">Tiga skor terendah</span>
+                <span style="--c:#A8BEA0">Indikator lainnya</span>
+              </div>
+            </div>
+            <div>
+              <h3>Daftar indikator</h3>
+              <ul class="indicator-list" id="daftar-butir"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Temuan utama -->
+    <section class="section section-flush">
+      <div class="container">
+        <h2>Temuan Utama</h2>
+        <h3 class="finding-title">Perilaku dengan nilai tertinggi</h3>
+        <div class="grid grid-3" id="temuan-tertinggi"></div>
+        <h3 class="finding-title">Perilaku yang masih perlu ditingkatkan</h3>
+        <div class="grid grid-3" id="temuan-terendah"></div>
+        <p class="meta-note" id="catatan-sama"></p>
+      </div>
+    </section>
+
+    <!-- Analisis -->
+    <section class="section section-flush">
+      <div class="container">
+        <h2>Analisis Data</h2>
+        <ul class="insight-list" id="daftar-insight"></ul>
+      </div>
+    </section>
+
+    <!-- Sumber -->
+    <section class="section section-flush">
+      <div class="container">
+        <h2>Sumber dan Periode Survei</h2>
+        <div class="source-box"><dl id="daftar-sumber"></dl></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="container">
+      <div class="cta">
+        <h2>Dari data menjadi aksi</h2>
+        <p>Gunakan temuan survei ini sebagai dasar kebiasaan hemat energi di sekolah dan di rumah.</p>
+        <a href="aksi.html" class="btn btn-light">Lihat Aksi &amp; Rekomendasi</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- FOOTER (sama di semua halaman) -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <a href="index.html" class="logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg>
+          EnergyCare
+        </a>
+        <p>Kampanye sekolah untuk konservasi dan penghematan energi.</p>
+      </div>
+      <ul>
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="tentang.html">Tentang</a></li>
+        <li><a href="data.html">Data &amp; Fakta</a></li>
+        <li><a href="aksi.html">Aksi &amp; Rekomendasi</a></li>
+      </ul>
+    </div>
+    <p class="footer-bottom">&copy; 2026 EnergyCare. Dibuat untuk kampanye sekolah.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/data.js"></script>
+</body>
+</html>
